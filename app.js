@@ -7,5 +7,5 @@ const mailRoute = require('./routes/sendMail')
 
 app.use(mailRoute)
 
-app.listen(process.env.PORT, console.log('Server is up and running '+ port))    
+app.listen(process.env.PORT, console.log('Server is up and running '+ process.env.PORT))    
 
