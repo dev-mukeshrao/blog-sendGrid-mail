@@ -34,9 +34,8 @@ npm i express @sendgrid/mail dotenv
 
 Now let's set up the root file of our project and name it as your will.
 
-```bash
-App.js
-```
+
+## app.js
 
 ```bash
 const express = require("express");
@@ -48,7 +47,51 @@ app.use(mailRoute)
 app.listen(process.env.PORT, console.log('Server is up and running '+ process.env.PORT))  
 ```
 
+# setup sendgrid account inside our project
+## email/account.js
 
+```bash
+const sgMail = require('@sendgrid/mail')
+require('dotenv').config()
+sgMail.setApiKey(process.env.SENDGRID_API_KEY) //your sendgrid api key
+
+const sendMail = (email, name) => {
+    sgMail.send({
+        to:'toemail@email.com',
+        from: 'fromemail@email.com', 
+        subject: 'here comes subject line', 
+        text: `here comes the body ${name}` 
+    })
+}
+
+module.exports = {
+    sendMail
+}
+```
+
+# setting up email fuctionality 
+
+## sendMail.js
+
+```bash
+const express = require('express')
+const { append } = require('express/lib/response')
+const { sendMail } = require('../emails/accounts')
+const statusCode = require('../constants/constants')
+
+const router = new express.Router()
+
+router.get('/sendmail', (req, res) => {
+    try {
+        sendMail('toemail@email.com','name')
+        res.status(statusCode.ok).send({message: 'Mail Sent'})
+    } catch (error) {
+        res.status(statusCode.internalServerError).send({error})
+    }
+})
+
+module.exports = router
+```
 
 
 
